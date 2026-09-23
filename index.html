@@ -233,56 +233,67 @@
             {
                 number: '00',
                 title: 'Overview',
+                filename: '00-overview.html',
                 description: 'The complete contractor lifecycle at a glance. From inquiry through closeout, showing money in (client billing) and money out (supplier payments).'
             },
             {
                 number: '01',
                 title: 'Win the Work',
+                filename: '01-win-the-work.html',
                 description: 'Go/no-go decision, takeoff estimation, RFQ process, competitive bid review, and award. Entry point to detailed workflows.'
             },
             {
                 number: '02',
                 title: 'Contract Setup and Budget',
+                filename: '02-contract-setup.html',
                 description: 'Contract register, bonds, advance payment, cost budget creation, project programme, and cash forecast.'
             },
             {
                 number: '03',
                 title: 'Procure to Pay',
+                filename: '03-procure-to-pay.html',
                 description: 'Material and service procurement. Request, budget check, 3-quote process, PO issuance, goods receipt, 3-way match, and payment run.'
             },
             {
                 number: '04',
                 title: 'Subcontract Lifecycle',
+                filename: '04-subcontract-lifecycle.html',
                 description: 'Work package release, bid leveling, subcontract award, bonds, advance, measurement, valuation, deductions, certificate, and payment.'
             },
             {
                 number: '05',
                 title: 'Site Execution and Change Control',
+                filename: '05-site-and-change-control.html',
                 description: 'Daily lookahead, site diary, inspections, non-conformance reports, variation notices, priced variations, and delay events.'
             },
             {
                 number: '06',
                 title: 'Client Billing and Receivables',
+                filename: '06-billing-and-receivables.html',
                 description: 'Interim payment certificates, engineer certification, tax invoicing, receipt tracking, and payment reminders (30/60/90 escalation).'
             },
             {
                 number: '07',
                 title: 'Payables, Cash and Ageing',
+                filename: '07-payables-and-cash.html',
                 description: 'Accounts payable ledger, AP ageing analysis, 13-week cash forecast, payment proposal, FD approval, and bank reconciliation.'
             },
             {
                 number: '08',
                 title: 'Cost Control and Monthly Close',
+                filename: '08-cost-control-and-close.html',
                 description: 'Commitment tracking, actuals vs budget, value earned analysis, cost variance reports, final cost forecast, and month-end review.'
             },
             {
                 number: '09',
                 title: 'Deadlines and Reminders',
+                filename: '09-deadlines-and-reminders.html',
                 description: 'Deadline register, daily sweep, owner notification, 3-day escalation, and weekly digest. Keeps the project on schedule.'
             },
             {
                 number: '10',
                 title: 'Completion and Financial Close',
+                filename: '10-completion-and-closeout.html',
                 description: 'Taking-over, retention releases, defects liability period, defects certificate, final account, and project close.'
             }
         ];
@@ -324,13 +335,11 @@
                 card.className = 'diagram-card';
                 card.setAttribute('data-diagram-number', diagram.number);
 
-                const filename = `${diagram.number}-${diagram.title.toLowerCase().replace(/\s+/g, '-')}.html`;
-
                 card.innerHTML = `
                     <div class="diagram-number">${diagram.number}</div>
                     <h3>${diagram.title}</h3>
                     <p>${diagram.description}</p>
-                    <button class="diagram-link" onclick="openDiagram('${filename}')">Open Diagram →</button>
+                    <button class="diagram-link" onclick="openDiagram('${diagram.filename}')">Open Diagram →</button>
                 `;
 
                 // Add hover events for sequence highlighting
