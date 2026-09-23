@@ -1,8 +1,0 @@
-{ "mode": "auto", "entries": {
-  "external": { "label": "Client / supplier / sub" },
-  "backend": { "label": "Internal task" },
-  "security": { "label": "Approval gate / check" },
-  "database": { "label": "Record / ledger" },
-  "messagebus": { "label": "Notice / reminder" },
-  "cloud": { "label": "Site work" },
-  "frontend": { "label": "Document issued" } } }
