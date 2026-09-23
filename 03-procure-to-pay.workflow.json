@@ -1,0 +1,388 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Procure to Pay: Materials",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "external": {
+          "label": "Client / supplier / sub"
+        },
+        "backend": {
+          "label": "Internal task"
+        },
+        "security": {
+          "label": "Approval gate / check"
+        },
+        "database": {
+          "label": "Record / ledger"
+        },
+        "messagebus": {
+          "label": "Notice / reminder"
+        },
+        "cloud": {
+          "label": "Site work"
+        },
+        "frontend": {
+          "label": "Document issued"
+        }
+      }
+    },
+    "views": [
+      {
+        "id": "request",
+        "label": "1. Request and approve",
+        "focus": [
+          "req",
+          "check",
+          "quotes",
+          "approve"
+        ],
+        "note": "Site raises it, system checks budget and stock, buyer gets 3 quotes, the right person approves by value."
+      },
+      {
+        "id": "order",
+        "label": "2. Order and receive",
+        "focus": [
+          "po",
+          "commit",
+          "deliver",
+          "grn",
+          "stock"
+        ],
+        "note": "PO counts against budget the day it is issued. Store records what arrived, partial or full, same day."
+      },
+      {
+        "id": "pay",
+        "label": "3. Match and pay",
+        "focus": [
+          "grn",
+          "match",
+          "pay"
+        ],
+        "note": "Pay only what was ordered and received. AP matches PO, GRN and invoice, then it joins the next payment run."
+      },
+      {
+        "id": "exceptions",
+        "label": "Exceptions",
+        "focus": [
+          "overbudget",
+          "grn",
+          "deliver",
+          "hold",
+          "late"
+        ],
+        "note": "Over budget goes to the PM. Bad goods go back. Mismatches wait on hold. Missed due dates go to FD."
+      }
+    ]
+  },
+  "lanes": [
+    {
+      "id": "site",
+      "label": "Site & Stores"
+    },
+    {
+      "id": "proc",
+      "label": "Procurement"
+    },
+    {
+      "id": "fin",
+      "label": "Finance & AP"
+    },
+    {
+      "id": "exc",
+      "label": "Exceptions & Escalation",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "ph1",
+      "label": "Request + approve",
+      "fromCol": 0,
+      "toCol": 2
+    },
+    {
+      "id": "ph2",
+      "label": "Order + receive",
+      "fromCol": 3,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ph3",
+      "label": "Match + pay",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "req",
+    "check",
+    "quotes",
+    "approve",
+    "po",
+    "deliver",
+    "grn",
+    "match",
+    "pay"
+  ],
+  "nodes": [
+    {
+      "id": "req",
+      "lane": "site",
+      "col": 0,
+      "type": "cloud",
+      "label": "Material Request",
+      "width": 132,
+      "sublabel": "from lookahead",
+      "tag": "Site Eng"
+    },
+    {
+      "id": "check",
+      "lane": "proc",
+      "col": 0,
+      "type": "security",
+      "label": "Budget + Stock",
+      "width": 132,
+      "sublabel": "cost code balance",
+      "tag": "Auto check"
+    },
+    {
+      "id": "quotes",
+      "lane": "proc",
+      "col": 1,
+      "type": "external",
+      "label": "Get 3 Quotes",
+      "width": 132,
+      "sublabel": "suppliers reply",
+      "tag": "Buyer \u00b7 2 days"
+    },
+    {
+      "id": "approve",
+      "lane": "proc",
+      "col": 2,
+      "type": "security",
+      "label": "Compare + Approve",
+      "width": 132,
+      "sublabel": "by authority limit",
+      "tag": "PM / Director"
+    },
+    {
+      "id": "po",
+      "lane": "proc",
+      "col": 3,
+      "type": "frontend",
+      "label": "Issue PO",
+      "width": 132,
+      "sublabel": "rates, dates, terms",
+      "tag": "Buyer \u00b7 same day"
+    },
+    {
+      "id": "commit",
+      "lane": "fin",
+      "col": 3,
+      "type": "database",
+      "label": "Commitment",
+      "width": 132,
+      "sublabel": "budget reduced now",
+      "tag": "Auto"
+    },
+    {
+      "id": "deliver",
+      "lane": "site",
+      "col": 3,
+      "type": "external",
+      "label": "Delivery",
+      "width": 132,
+      "sublabel": "note quotes PO no.",
+      "tag": "Supplier"
+    },
+    {
+      "id": "grn",
+      "lane": "site",
+      "col": 4,
+      "type": "database",
+      "label": "Goods Received",
+      "width": 132,
+      "sublabel": "qty, photos, partial",
+      "tag": "Store \u00b7 same day"
+    },
+    {
+      "id": "stock",
+      "lane": "site",
+      "col": 5,
+      "type": "database",
+      "label": "Stores Ledger",
+      "width": 132,
+      "sublabel": "issue to work pack",
+      "tag": "Storekeeper"
+    },
+    {
+      "id": "match",
+      "lane": "fin",
+      "col": 4,
+      "type": "security",
+      "label": "3-Way Match",
+      "width": 132,
+      "sublabel": "PO, GRN, invoice",
+      "tag": "AP \u00b7 3 days"
+    },
+    {
+      "id": "pay",
+      "lane": "fin",
+      "col": 5,
+      "type": "backend",
+      "label": "Payment Run",
+      "width": 132,
+      "sublabel": "by due date, post GL",
+      "tag": "Finance \u00b7 weekly"
+    },
+    {
+      "id": "overbudget",
+      "lane": "exc",
+      "col": 0,
+      "type": "messagebus",
+      "label": "Over Budget",
+      "width": 132,
+      "sublabel": "transfer or change",
+      "tag": "PM decides"
+    },
+    {
+      "id": "late",
+      "lane": "exc",
+      "col": 5,
+      "type": "messagebus",
+      "label": "Past Due Date",
+      "width": 132,
+      "sublabel": "supplier chasing",
+      "tag": "Escalate to FD"
+    },
+    {
+      "id": "hold",
+      "lane": "exc",
+      "col": 4,
+      "type": "messagebus",
+      "label": "Invoice on Hold",
+      "width": 132,
+      "sublabel": "query, debit note",
+      "tag": "AP"
+    }
+  ],
+  "edges": [
+    {
+      "from": "req",
+      "to": "check",
+      "variant": "emphasis"
+    },
+    {
+      "from": "check",
+      "to": "quotes",
+      "variant": "emphasis",
+      "label": "in budget"
+    },
+    {
+      "from": "quotes",
+      "to": "approve",
+      "variant": "emphasis"
+    },
+    {
+      "from": "approve",
+      "to": "po",
+      "variant": "emphasis",
+      "label": "approved"
+    },
+    {
+      "from": "po",
+      "to": "deliver",
+      "variant": "emphasis"
+    },
+    {
+      "from": "deliver",
+      "to": "grn",
+      "variant": "emphasis"
+    },
+    {
+      "from": "grn",
+      "to": "match",
+      "variant": "emphasis",
+      "label": "+ invoice"
+    },
+    {
+      "from": "match",
+      "to": "pay",
+      "variant": "emphasis",
+      "label": "matched"
+    },
+    {
+      "from": "po",
+      "to": "commit",
+      "variant": "dashed",
+      "label": "commit",
+      "role": "async"
+    },
+    {
+      "from": "grn",
+      "to": "stock",
+      "variant": "dashed",
+      "label": "stock in",
+      "role": "branch"
+    },
+    {
+      "from": "check",
+      "to": "overbudget",
+      "variant": "security",
+      "label": "over",
+      "role": "error"
+    },
+    {
+      "from": "grn",
+      "to": "deliver",
+      "variant": "dashed",
+      "label": "reject",
+      "role": "return"
+    },
+    {
+      "from": "pay",
+      "to": "late",
+      "variant": "security",
+      "label": "missed",
+      "role": "error"
+    },
+    {
+      "from": "match",
+      "to": "hold",
+      "variant": "security",
+      "label": "mismatch",
+      "role": "error"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Controls",
+      "items": [
+        "No PO without budget",
+        "No payment without GRN"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Next Action",
+      "items": [
+        "Unmatched invoice: AP chases in 3 days",
+        "PO past delivery date: buyer chases"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Ageing",
+      "items": [
+        "Bills due in 7 days go to payment run"
+      ]
+    }
+  ]
+}

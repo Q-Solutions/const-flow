@@ -1,0 +1,381 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Win the Work: Inquiry to Contract",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "external": {
+          "label": "Client / supplier / sub"
+        },
+        "backend": {
+          "label": "Internal task"
+        },
+        "security": {
+          "label": "Approval gate / check"
+        },
+        "database": {
+          "label": "Record / ledger"
+        },
+        "messagebus": {
+          "label": "Notice / reminder"
+        },
+        "cloud": {
+          "label": "Site work"
+        },
+        "frontend": {
+          "label": "Document issued"
+        }
+      }
+    },
+    "views": [
+      {
+        "id": "qualify",
+        "label": "1. Qualify",
+        "focus": [
+          "inquiry",
+          "gonogo",
+          "decline"
+        ],
+        "note": "Log every inquiry with its deadline. Decide go or no-go in 2 days. Record why you declined."
+      },
+      {
+        "id": "price",
+        "label": "2. Price",
+        "focus": [
+          "takeoff",
+          "rfq",
+          "price",
+          "clarify"
+        ],
+        "note": "Take off quantities, send RFQs early, and raise tender queries before the query deadline."
+      },
+      {
+        "id": "submit",
+        "label": "3. Review and submit",
+        "focus": [
+          "review",
+          "submit"
+        ],
+        "note": "Directors sign off price, risk and cash need. Submit with bid bond before the deadline."
+      },
+      {
+        "id": "award",
+        "label": "4. Award",
+        "focus": [
+          "negotiate",
+          "award",
+          "contract",
+          "lost"
+        ],
+        "note": "Negotiate, sign, and hand the contract to the project team. If lost, get a debrief."
+      }
+    ]
+  },
+  "lanes": [
+    {
+      "id": "client",
+      "label": "Client & Consultants"
+    },
+    {
+      "id": "bd",
+      "label": "Business Development"
+    },
+    {
+      "id": "est",
+      "label": "Estimating"
+    },
+    {
+      "id": "exc",
+      "label": "Exceptions & Escalation",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "ph1",
+      "label": "Qualify",
+      "fromCol": 0,
+      "toCol": 0
+    },
+    {
+      "id": "ph2",
+      "label": "Price",
+      "fromCol": 1,
+      "toCol": 2
+    },
+    {
+      "id": "ph3",
+      "label": "Submit",
+      "fromCol": 3,
+      "toCol": 4,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ph4",
+      "label": "Award",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "inquiry",
+    "gonogo",
+    "takeoff",
+    "price",
+    "review",
+    "submit",
+    "negotiate",
+    "award",
+    "contract"
+  ],
+  "nodes": [
+    {
+      "id": "inquiry",
+      "lane": "client",
+      "col": 0,
+      "type": "external",
+      "label": "Inquiry / RFP",
+      "width": 132,
+      "sublabel": "tender docs, deadline",
+      "tag": "Client"
+    },
+    {
+      "id": "gonogo",
+      "lane": "bd",
+      "col": 0,
+      "type": "security",
+      "label": "Go / No-Go",
+      "width": 132,
+      "sublabel": "fit, risk, capacity",
+      "tag": "BD Head \u00b7 2 days"
+    },
+    {
+      "id": "takeoff",
+      "lane": "est",
+      "col": 1,
+      "type": "backend",
+      "label": "Quantity Takeoff",
+      "width": 132,
+      "sublabel": "drawings to BOQ",
+      "tag": "Estimator"
+    },
+    {
+      "id": "rfq",
+      "lane": "bd",
+      "col": 1,
+      "type": "messagebus",
+      "label": "Sub + Supplier RFQs",
+      "width": 132,
+      "sublabel": "quotes per package",
+      "tag": "Estimator \u00b7 5 days"
+    },
+    {
+      "id": "price",
+      "lane": "est",
+      "col": 2,
+      "type": "backend",
+      "label": "Build Up Price",
+      "width": 132,
+      "sublabel": "direct + OH + margin",
+      "tag": "Estimator"
+    },
+    {
+      "id": "clarify",
+      "lane": "client",
+      "col": 2,
+      "type": "external",
+      "label": "Tender Queries",
+      "width": 132,
+      "sublabel": "RFIs, addenda",
+      "tag": "Client"
+    },
+    {
+      "id": "review",
+      "lane": "bd",
+      "col": 3,
+      "type": "security",
+      "label": "Bid Review",
+      "width": 132,
+      "sublabel": "price, risk, cash",
+      "tag": "Directors"
+    },
+    {
+      "id": "submit",
+      "lane": "bd",
+      "col": 4,
+      "type": "frontend",
+      "label": "Submit Bid",
+      "width": 132,
+      "sublabel": "bid bond attached",
+      "tag": "BD \u00b7 before deadline"
+    },
+    {
+      "id": "negotiate",
+      "lane": "client",
+      "col": 4,
+      "type": "external",
+      "label": "Negotiate",
+      "width": 132,
+      "sublabel": "clarify, revise",
+      "tag": "Client"
+    },
+    {
+      "id": "award",
+      "lane": "client",
+      "col": 5,
+      "type": "security",
+      "label": "Award",
+      "width": 132,
+      "sublabel": "LOA or regret",
+      "tag": "Client"
+    },
+    {
+      "id": "contract",
+      "lane": "bd",
+      "col": 5,
+      "type": "database",
+      "label": "Sign Contract",
+      "width": 132,
+      "sublabel": "handover to project",
+      "tag": "BD + PM"
+    },
+    {
+      "id": "decline",
+      "lane": "exc",
+      "col": 0,
+      "type": "messagebus",
+      "label": "Decline",
+      "width": 132,
+      "sublabel": "log reason",
+      "tag": "BD"
+    },
+    {
+      "id": "lost",
+      "lane": "exc",
+      "col": 5,
+      "type": "database",
+      "label": "Lost: Debrief",
+      "width": 132,
+      "sublabel": "price gap, winner",
+      "tag": "BD"
+    }
+  ],
+  "edges": [
+    {
+      "from": "inquiry",
+      "to": "gonogo",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "gonogo",
+      "to": "takeoff",
+      "variant": "emphasis",
+      "label": "go"
+    },
+    {
+      "from": "takeoff",
+      "to": "rfq",
+      "variant": "dashed",
+      "label": "packages",
+      "role": "branch"
+    },
+    {
+      "from": "takeoff",
+      "to": "price",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "rfq",
+      "to": "price",
+      "variant": "dashed",
+      "label": "best rates",
+      "role": "branch"
+    },
+    {
+      "from": "price",
+      "to": "clarify",
+      "variant": "dashed",
+      "label": "queries",
+      "role": "async"
+    },
+    {
+      "from": "price",
+      "to": "review",
+      "variant": "emphasis"
+    },
+    {
+      "from": "review",
+      "to": "submit",
+      "variant": "emphasis",
+      "label": "approved",
+      "route": "straight"
+    },
+    {
+      "from": "submit",
+      "to": "negotiate",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "from": "negotiate",
+      "to": "award",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "award",
+      "to": "contract",
+      "variant": "emphasis",
+      "label": "awarded"
+    },
+    {
+      "from": "gonogo",
+      "to": "decline",
+      "variant": "security",
+      "label": "no-go",
+      "role": "error"
+    },
+    {
+      "from": "award",
+      "to": "lost",
+      "variant": "security",
+      "label": "not awarded",
+      "role": "error"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Deadlines Tracked",
+      "items": [
+        "Query deadline",
+        "Bid submission date",
+        "Bid bond validity"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Next Action",
+      "items": [
+        "RFQ not answered in 5 days: chase or replace"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Win / Loss",
+      "items": [
+        "Record price gap on every lost bid"
+      ]
+    }
+  ]
+}

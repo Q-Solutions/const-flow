@@ -1,0 +1,321 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Client Billing and Receivables",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "external": {
+          "label": "Client / supplier / sub"
+        },
+        "backend": {
+          "label": "Internal task"
+        },
+        "security": {
+          "label": "Approval gate / check"
+        },
+        "database": {
+          "label": "Record / ledger"
+        },
+        "messagebus": {
+          "label": "Notice / reminder"
+        },
+        "cloud": {
+          "label": "Site work"
+        },
+        "frontend": {
+          "label": "Document issued"
+        }
+      }
+    },
+    "views": [
+      {
+        "id": "prepare",
+        "label": "1. Prepare the IPC",
+        "focus": [
+          "cutoff",
+          "draft",
+          "review"
+        ],
+        "note": "At cut-off, value work done, approved VOs and materials on site, less retention and advance recovery."
+      },
+      {
+        "id": "certify",
+        "label": "2. Get it certified",
+        "focus": [
+          "review",
+          "assess",
+          "cert",
+          "dispute"
+        ],
+        "note": "Submit on time. Track the engineer's certification deadline. Query any short-certified item in 7 days."
+      },
+      {
+        "id": "collect",
+        "label": "3. Invoice and collect",
+        "focus": [
+          "cert",
+          "invoice",
+          "receipt"
+        ],
+        "note": "Invoice the certified amount the same day. Match every receipt to its invoice and bank line."
+      },
+      {
+        "id": "ageing",
+        "label": "4. Ageing and follow-up",
+        "focus": [
+          "remind",
+          "overdue",
+          "receipt"
+        ],
+        "note": "Remind 7 days before due and on due. At 30, 60, 90 days overdue, escalate and apply contract remedies."
+      }
+    ],
+    "viewBox": [
+      1030,
+      660
+    ]
+  },
+  "lanes": [
+    {
+      "id": "client",
+      "label": "Client & Engineer"
+    },
+    {
+      "id": "qs",
+      "label": "QS & Billing"
+    },
+    {
+      "id": "fin",
+      "label": "Finance & AR"
+    },
+    {
+      "id": "exc",
+      "label": "Ageing & Disputes",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "ph1",
+      "label": "Prepare",
+      "fromCol": 0,
+      "toCol": 2
+    },
+    {
+      "id": "ph2",
+      "label": "Certify",
+      "fromCol": 3,
+      "toCol": 4,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ph3",
+      "label": "Collect",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "cutoff",
+    "draft",
+    "review",
+    "assess",
+    "cert",
+    "invoice",
+    "receipt"
+  ],
+  "nodes": [
+    {
+      "id": "cutoff",
+      "lane": "qs",
+      "col": 0,
+      "type": "backend",
+      "label": "Monthly Cut-off",
+      "width": 132,
+      "sublabel": "progress + VOs",
+      "tag": "QS \u00b7 25th"
+    },
+    {
+      "id": "draft",
+      "lane": "qs",
+      "col": 1,
+      "type": "backend",
+      "label": "Draft IPC",
+      "width": 132,
+      "sublabel": "work, VOs, materials",
+      "tag": "QS \u00b7 3 days"
+    },
+    {
+      "id": "review",
+      "lane": "qs",
+      "col": 2,
+      "type": "security",
+      "label": "Internal Review",
+      "width": 132,
+      "sublabel": "PM signs off",
+      "tag": "PM \u00b7 2 days"
+    },
+    {
+      "id": "assess",
+      "lane": "client",
+      "col": 3,
+      "type": "security",
+      "label": "Engineer Assessment",
+      "width": 132,
+      "sublabel": "within contract days",
+      "tag": "Engineer"
+    },
+    {
+      "id": "cert",
+      "lane": "client",
+      "col": 4,
+      "type": "frontend",
+      "label": "Payment Certificate",
+      "width": 132,
+      "sublabel": "certified amount",
+      "tag": "Engineer"
+    },
+    {
+      "id": "invoice",
+      "lane": "fin",
+      "col": 4,
+      "type": "frontend",
+      "label": "Tax Invoice",
+      "width": 132,
+      "sublabel": "on certificate",
+      "tag": "AR \u00b7 same day"
+    },
+    {
+      "id": "receipt",
+      "lane": "fin",
+      "col": 5,
+      "type": "database",
+      "label": "Receipt + Match",
+      "width": 132,
+      "sublabel": "bank, allocate",
+      "tag": "AR \u00b7 on receipt"
+    },
+    {
+      "id": "dispute",
+      "lane": "exc",
+      "col": 3,
+      "type": "messagebus",
+      "label": "Under-certified",
+      "width": 132,
+      "sublabel": "query, resubmit",
+      "tag": "QS \u00b7 7 days"
+    },
+    {
+      "id": "remind",
+      "lane": "exc",
+      "col": 4,
+      "type": "messagebus",
+      "label": "Due Date Reminder",
+      "width": 132,
+      "sublabel": "7 days before, on due",
+      "tag": "Auto"
+    },
+    {
+      "id": "overdue",
+      "lane": "exc",
+      "col": 5,
+      "type": "messagebus",
+      "label": "Overdue Escalation",
+      "width": 132,
+      "sublabel": "30, 60, 90 days",
+      "tag": "PM, then Director"
+    }
+  ],
+  "edges": [
+    {
+      "from": "cutoff",
+      "to": "draft",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "draft",
+      "to": "review",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "review",
+      "to": "assess",
+      "variant": "emphasis",
+      "label": "submit"
+    },
+    {
+      "from": "assess",
+      "to": "cert",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "cert",
+      "to": "invoice",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "invoice",
+      "to": "receipt",
+      "variant": "emphasis",
+      "label": "paid",
+      "route": "straight"
+    },
+    {
+      "from": "assess",
+      "to": "dispute",
+      "variant": "security",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "role": "error"
+    },
+    {
+      "from": "invoice",
+      "to": "remind",
+      "variant": "dashed",
+      "label": "due date",
+      "role": "async"
+    },
+    {
+      "from": "remind",
+      "to": "overdue",
+      "variant": "security",
+      "label": "not paid",
+      "role": "error"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "IPC Formula",
+      "items": [
+        "Work + VOs + materials on site",
+        "Less retention, advance, previous"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Ageing Buckets",
+      "items": [
+        "Current, 1-30, 31-60, 61-90, 90+"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Remedies",
+      "items": [
+        "Interest, notice, suspension"
+      ]
+    }
+  ]
+}

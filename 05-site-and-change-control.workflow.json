@@ -1,0 +1,347 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Site Execution and Change Control",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "external": {
+          "label": "Client / supplier / sub"
+        },
+        "backend": {
+          "label": "Internal task"
+        },
+        "security": {
+          "label": "Approval gate / check"
+        },
+        "database": {
+          "label": "Record / ledger"
+        },
+        "messagebus": {
+          "label": "Notice / reminder"
+        },
+        "cloud": {
+          "label": "Site work"
+        },
+        "frontend": {
+          "label": "Document issued"
+        }
+      }
+    },
+    "views": [
+      {
+        "id": "build",
+        "label": "1. Plan and build",
+        "focus": [
+          "lookahead",
+          "execute",
+          "diary"
+        ],
+        "note": "Plan three weeks ahead, build, and record labour, plant, weather and delays every day."
+      },
+      {
+        "id": "inspect",
+        "label": "2. Inspect and record",
+        "focus": [
+          "inspect",
+          "ncr",
+          "progress"
+        ],
+        "note": "Nothing is covered up without a signed inspection. Failed work becomes an NCR and is rechecked."
+      },
+      {
+        "id": "change",
+        "label": "3. Change control",
+        "focus": [
+          "instr",
+          "notice",
+          "price",
+          "approve"
+        ],
+        "note": "Every instruction gets a written notice inside the contract period, then a priced VO."
+      },
+      {
+        "id": "time",
+        "label": "4. Delay and billing",
+        "focus": [
+          "eot",
+          "progress",
+          "billing"
+        ],
+        "note": "Delays are noticed on time with diary records. Approved progress and VOs go to monthly billing."
+      }
+    ],
+    "viewBox": [
+      1030,
+      660
+    ]
+  },
+  "lanes": [
+    {
+      "id": "client",
+      "label": "Client & Engineer"
+    },
+    {
+      "id": "qs",
+      "label": "QS & Controls"
+    },
+    {
+      "id": "site",
+      "label": "Site Team"
+    },
+    {
+      "id": "exc",
+      "label": "Exceptions & Escalation",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "ph1",
+      "label": "Plan + build",
+      "fromCol": 0,
+      "toCol": 2
+    },
+    {
+      "id": "ph2",
+      "label": "Inspect",
+      "fromCol": 3,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ph3",
+      "label": "Measure + bill",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "lookahead",
+    "execute",
+    "diary",
+    "inspect",
+    "progress",
+    "billing"
+  ],
+  "nodes": [
+    {
+      "id": "lookahead",
+      "lane": "site",
+      "col": 0,
+      "type": "backend",
+      "label": "Lookahead Plan",
+      "width": 132,
+      "sublabel": "3 weeks by trade",
+      "tag": "Site Manager \u00b7 weekly"
+    },
+    {
+      "id": "execute",
+      "lane": "site",
+      "col": 1,
+      "type": "cloud",
+      "label": "Execute Works",
+      "width": 132,
+      "sublabel": "own crews + subs",
+      "tag": "Foreman"
+    },
+    {
+      "id": "diary",
+      "lane": "site",
+      "col": 2,
+      "type": "database",
+      "label": "Daily Diary",
+      "width": 132,
+      "sublabel": "labour, plant, weather",
+      "tag": "Site Eng \u00b7 daily"
+    },
+    {
+      "id": "inspect",
+      "lane": "site",
+      "col": 3,
+      "type": "security",
+      "label": "Inspection",
+      "width": 132,
+      "sublabel": "engineer signs IR",
+      "tag": "Engineer \u00b7 24 h"
+    },
+    {
+      "id": "progress",
+      "lane": "qs",
+      "col": 4,
+      "type": "database",
+      "label": "Progress by BOQ",
+      "width": 132,
+      "sublabel": "% done, S-curve",
+      "tag": "QS \u00b7 monthly"
+    },
+    {
+      "id": "billing",
+      "lane": "qs",
+      "col": 5,
+      "type": "frontend",
+      "label": "To Billing",
+      "width": 132,
+      "sublabel": "IPC + sub valuations",
+      "tag": "QS \u00b7 by cut-off"
+    },
+    {
+      "id": "instr",
+      "lane": "client",
+      "col": 1,
+      "type": "external",
+      "label": "Site Instruction",
+      "width": 132,
+      "sublabel": "change, RFI answer",
+      "tag": "Engineer"
+    },
+    {
+      "id": "notice",
+      "lane": "qs",
+      "col": 2,
+      "type": "messagebus",
+      "label": "Variation Notice",
+      "width": 132,
+      "sublabel": "within notice period",
+      "tag": "QS \u00b7 per contract"
+    },
+    {
+      "id": "price",
+      "lane": "qs",
+      "col": 3,
+      "type": "backend",
+      "label": "Price Variation",
+      "width": 132,
+      "sublabel": "rates, time impact",
+      "tag": "QS \u00b7 14 days"
+    },
+    {
+      "id": "approve",
+      "lane": "client",
+      "col": 4,
+      "type": "security",
+      "label": "Approve VO",
+      "width": 132,
+      "sublabel": "signed VO",
+      "tag": "Engineer"
+    },
+    {
+      "id": "ncr",
+      "lane": "exc",
+      "col": 3,
+      "type": "messagebus",
+      "label": "NCR + Rework",
+      "width": 132,
+      "sublabel": "cause, fix, recheck",
+      "tag": "Site Eng"
+    },
+    {
+      "id": "eot",
+      "lane": "exc",
+      "col": 2,
+      "type": "messagebus",
+      "label": "Delay Event",
+      "width": 132,
+      "sublabel": "EOT notice, records",
+      "tag": "PM \u00b7 per contract"
+    }
+  ],
+  "edges": [
+    {
+      "from": "lookahead",
+      "to": "execute",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "execute",
+      "to": "diary",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "diary",
+      "to": "inspect",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "inspect",
+      "to": "progress",
+      "variant": "emphasis",
+      "label": "passed"
+    },
+    {
+      "from": "progress",
+      "to": "billing",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "instr",
+      "to": "notice",
+      "variant": "emphasis",
+      "label": "instruction"
+    },
+    {
+      "from": "notice",
+      "to": "price",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "price",
+      "to": "approve",
+      "variant": "emphasis",
+      "label": "submit"
+    },
+    {
+      "from": "approve",
+      "to": "billing",
+      "variant": "emphasis",
+      "label": "add to sum"
+    },
+    {
+      "from": "inspect",
+      "to": "ncr",
+      "variant": "security",
+      "label": "rejected",
+      "role": "error"
+    },
+    {
+      "from": "diary",
+      "to": "eot",
+      "variant": "security",
+      "label": "delay",
+      "role": "error"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Time Bars",
+      "items": [
+        "Variation notice window",
+        "EOT notice window"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Next Action",
+      "items": [
+        "Open NCR over 7 days: escalate",
+        "VO unpriced 14 days: QS alert"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Records",
+      "items": [
+        "Diary backs every claim"
+      ]
+    }
+  ]
+}

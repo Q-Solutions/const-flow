@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contractor Operations Workflows - Navigation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .diagram-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .diagram-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .diagram-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .diagram-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .diagram-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+        }
+
+        .diagram-card h3 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+            line-height: 1.3;
+        }
+
+        .diagram-card p {
+            color: #666;
+            margin-bottom: 20px;
+            flex-grow: 1;
+            line-height: 1.5;
+            font-size: 0.95em;
+        }
+
+        .diagram-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .diagram-link:hover {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            transform: scale(1.05);
+        }
+
+        .workflow-sequence {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .workflow-sequence h2 {
+            color: #333;
+            margin-bottom: 24px;
+            font-size: 1.5em;
+        }
+
+        .sequence-flow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sequence-item {
+            background: #f5f5f5;
+            padding: 12px 18px;
+            border-radius: 6px;
+            font-weight: 500;
+            color: #666;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sequence-item:hover {
+            background: #e0e0e0;
+            transform: scale(1.05);
+        }
+
+        .sequence-item.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+        }
+
+        .sequence-item.highlighted {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+        }
+
+        .diagram-card.highlighted {
+            box-shadow: 0 0 0 3px #667eea, 0 15px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(-8px);
+        }
+
+        .arrow {
+            font-size: 1.3em;
+            color: #667eea;
+            opacity: 0.7;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: 2px solid white;
+            background: transparent;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .diagram-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sequence-flow {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Contractor Operations Workflows</h1>
+            <p>11 Interactive Diagrams | General Contractor Lifecycle</p>
+        </header>
+
+        <div class="controls">
+            <button class="btn" onclick="setMode('overview')">Overview Mode</button>
+            <button class="btn" onclick="setMode('all')">Full List</button>
+        </div>
+
+        <div class="workflow-sequence">
+            <h2>Workflow Sequence</h2>
+            <div class="sequence-flow">
+                <div class="sequence-item active" data-diagram="00" onclick="jumpToDiagram('00')">00. Overview</div>
+                <span class="arrow">→</span>
+                <div class="sequence-item" data-diagram="01" onclick="jumpToDiagram('01')">01. Win</div>
+                <span class="arrow">→</span>
+                <div class="sequence-item" data-diagram="02" onclick="jumpToDiagram('02')">02. Setup</div>
+                <span class="arrow">→</span>
+                <div class="sequence-item" data-diagram="03" onclick="jumpToDiagram('03')">03. P2P</div>
+                <span class="arrow">→</span>
+                <div class="sequence-item" data-diagram="04" onclick="jumpToDiagram('04')">04. Subs</div>
+                <span class="arrow">→</span>
+                <div class="sequence-item" data-diagram="05" onclick="jumpToDiagram('05')">05. Site</div>
+                <span class="arrow">→</span>
+                <div class="sequence-item" data-diagram="06" onclick="jumpToDiagram('06')">06. Bill</div>
+                <span class="arrow">→</span>
+                <div class="sequence-item" data-diagram="07" onclick="jumpToDiagram('07')">07. Pay</div>
+                <span class="arrow">→</span>
+                <div class="sequence-item" data-diagram="08" onclick="jumpToDiagram('08')">08. Cost</div>
+                <span class="arrow">→</span>
+                <div class="sequence-item" data-diagram="09" onclick="jumpToDiagram('09')">09. Remind</div>
+                <span class="arrow">→</span>
+                <div class="sequence-item" data-diagram="10" onclick="jumpToDiagram('10')">10. Close</div>
+            </div>
+        </div>
+
+        <div class="diagram-grid" id="diagram-grid">
+            <!-- Diagrams will be inserted here by JavaScript -->
+        </div>
+
+        <footer>
+            <p>All 11 workflow diagrams are ready. Each is a standalone, self-contained visualization.</p>
+        </footer>
+    </div>
+
+    <script>
+        const diagrams = [
+            {
+                number: '00',
+                title: 'Overview',
+                description: 'The complete contractor lifecycle at a glance. From inquiry through closeout, showing money in (client billing) and money out (supplier payments).',
+                covers: 'Inquiry → Award → Budget → Buy → Build → Bill → Pay → Close'
+            },
+            {
+                number: '01',
+                title: 'Win the Work',
+                description: 'Go/no-go decision, takeoff estimation, RFQ process, competitive bid review, and award. Entry point to detailed workflows.',
+                covers: 'Go/no-go → Takeoff → RFQs → Bid Review → Award → Contract Signing'
+            },
+            {
+                number: '02',
+                title: 'Contract Setup and Budget',
+                description: 'Contract register, bonds, advance payment, cost budget creation, project programme, and cash forecast.',
+                covers: 'Contract Register → Bonds → Advance → Budget → Programme → Cash Forecast'
+            },
+            {
+                number: '03',
+                title: 'Procure to Pay',
+                description: 'Material and service procurement. Request, budget check, 3-quote process, PO issuance, goods receipt, 3-way match, and payment run.',
+                covers: 'Request → Budget Check → RFQ → PO → GRN → 3-Way Match → Payment'
+            },
+            {
+                number: '04',
+                title: 'Subcontract Lifecycle',
+                description: 'Work package release, bid leveling, subcontract award, bonds, advance, measurement, valuation, deductions, certificate, and payment.',
+                covers: 'Package → Bid Level → Award → Bond → Advance → Measure → Valuate → Deduct → Certificate → Pay'
+            },
+            {
+                number: '05',
+                title: 'Site Execution and Change Control',
+                description: 'Daily lookahead, site diary, inspections, non-conformance reports, variation notices, priced variations, and delay events.',
+                covers: 'Lookahead → Diary → Inspect → NCR → Variation → Price → Delay Events'
+            },
+            {
+                number: '06',
+                title: 'Client Billing and Receivables',
+                description: 'Interim payment certificates, engineer certification, tax invoicing, receipt tracking, and payment reminders (30/60/90 escalation).',
+                covers: 'IPC → Certification → Invoice → Receipt → Due Reminder → Escalation'
+            },
+            {
+                number: '07',
+                title: 'Payables, Cash and Ageing',
+                description: 'Accounts payable ledger, AP ageing analysis, 13-week cash forecast, payment proposal, FD approval, and bank reconciliation.',
+                covers: 'AP Ledger → AP Ageing → Cash Forecast → Proposal → FD Approval → Reconcile'
+            },
+            {
+                number: '08',
+                title: 'Cost Control and Monthly Close',
+                description: 'Commitment tracking, actuals vs budget, value earned analysis, cost variance reports, final cost forecast, and month-end review.',
+                covers: 'Commitments → Actuals → Value Earned → CVR → Final Cost → Month-End → Review'
+            },
+            {
+                number: '09',
+                title: 'Deadlines and Reminders',
+                description: 'Deadline register, daily sweep, owner notification, 3-day escalation, and weekly digest. Keeps the project on schedule.',
+                covers: 'Register → Daily Sweep → Notify → Escalate → Weekly Digest'
+            },
+            {
+                number: '10',
+                title: 'Completion and Financial Close',
+                description: 'Taking-over, retention releases, defects liability period, defects certificate, final account, and project close.',
+                covers: 'Taking-Over → Retention 1 → Defects Period → Defects Cert → Final Account → Close'
+            }
+        ];
+
+        function renderDiagrams(filterMode = 'all') {
+            const grid = document.getElementById('diagram-grid');
+            grid.innerHTML = '';
+
+            diagrams.forEach((diagram, index) => {
+                const card = document.createElement('div');
+                card.className = 'diagram-card';
+
+                const filename = `${diagram.number}-${diagram.title.toLowerCase().replace(/\s+/g, '-')}.html`;
+
+                card.innerHTML = `
+                    <div class="diagram-number">${diagram.number}</div>
+                    <h3>${diagram.title}</h3>
+                    <p>${diagram.description}</p>
+                    <a href="${filename}" target="_blank" class="diagram-link">Open Diagram →</a>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        function setMode(mode) {
+            // For now, just render all diagrams
+            renderDiagrams('all');
+        }
+
+        // Initial render
+        renderDiagrams('all');
+    </script>
+</body>
+</html>

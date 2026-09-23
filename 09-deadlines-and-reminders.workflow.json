@@ -1,0 +1,289 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Deadlines and Reminders",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "external": {
+          "label": "Client / supplier / sub"
+        },
+        "backend": {
+          "label": "Internal task"
+        },
+        "security": {
+          "label": "Approval gate / check"
+        },
+        "database": {
+          "label": "Record / ledger"
+        },
+        "messagebus": {
+          "label": "Notice / reminder"
+        },
+        "cloud": {
+          "label": "Site work"
+        },
+        "frontend": {
+          "label": "Document issued"
+        }
+      }
+    },
+    "views": [
+      {
+        "id": "capture",
+        "label": "1. Every date has an owner",
+        "focus": [
+          "records",
+          "register"
+        ],
+        "note": "Any record with a date (IPC, bill, bond, VO notice, NCR) enters the register with an owner and a next step."
+      },
+      {
+        "id": "sweep",
+        "label": "2. Daily sweep",
+        "focus": [
+          "register",
+          "sweep",
+          "notify"
+        ],
+        "note": "Each day the system flags what is approaching, due, or late, and tells the owner exactly what to do next."
+      },
+      {
+        "id": "act",
+        "label": "3. Act and close",
+        "focus": [
+          "notify",
+          "act",
+          "done"
+        ],
+        "note": "The owner does the step and attaches proof. The item closes with a time stamp."
+      },
+      {
+        "id": "escalate",
+        "label": "4. Escalate",
+        "focus": [
+          "escalate",
+          "act",
+          "digest"
+        ],
+        "note": "Late for 3 days goes to the PM, then the Director. Monday digest lists open items by owner."
+      }
+    ],
+    "viewBox": [
+      1030,
+      660
+    ]
+  },
+  "lanes": [
+    {
+      "id": "src",
+      "label": "Dated Records"
+    },
+    {
+      "id": "eng",
+      "label": "Deadline Register"
+    },
+    {
+      "id": "own",
+      "label": "Record Owner"
+    },
+    {
+      "id": "mgmt",
+      "label": "Escalation",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "ph1",
+      "label": "Register",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "ph2",
+      "label": "Sweep + notify",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ph3",
+      "label": "Act or escalate",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "records",
+    "register",
+    "sweep",
+    "notify",
+    "act",
+    "done"
+  ],
+  "nodes": [
+    {
+      "id": "records",
+      "lane": "src",
+      "col": 0,
+      "type": "database",
+      "label": "Every Dated Record",
+      "width": 132,
+      "sublabel": "IPC, bill, bond, VO, NCR",
+      "tag": "All modules"
+    },
+    {
+      "id": "register",
+      "lane": "eng",
+      "col": 1,
+      "type": "database",
+      "label": "Deadline Register",
+      "width": 132,
+      "sublabel": "owner, due, next step",
+      "tag": "Auto"
+    },
+    {
+      "id": "sweep",
+      "lane": "eng",
+      "col": 2,
+      "type": "security",
+      "label": "Daily Sweep",
+      "width": 132,
+      "sublabel": "approaching, due, late",
+      "tag": "Auto \u00b7 daily"
+    },
+    {
+      "id": "notify",
+      "lane": "own",
+      "col": 3,
+      "type": "messagebus",
+      "label": "Notify Owner",
+      "width": 132,
+      "sublabel": "the next step to take",
+      "tag": "Auto"
+    },
+    {
+      "id": "act",
+      "lane": "own",
+      "col": 4,
+      "type": "backend",
+      "label": "Owner Acts",
+      "width": 132,
+      "sublabel": "do it, attach proof",
+      "tag": "Owner"
+    },
+    {
+      "id": "done",
+      "lane": "own",
+      "col": 5,
+      "type": "database",
+      "label": "Closed",
+      "width": 132,
+      "sublabel": "time-stamped",
+      "tag": "Auto"
+    },
+    {
+      "id": "escalate",
+      "lane": "mgmt",
+      "col": 4,
+      "type": "messagebus",
+      "label": "Escalate",
+      "width": 132,
+      "sublabel": "late past 3 days",
+      "tag": "PM, then Director"
+    },
+    {
+      "id": "digest",
+      "lane": "mgmt",
+      "col": 5,
+      "type": "frontend",
+      "label": "Weekly Digest",
+      "width": 132,
+      "sublabel": "open items by owner",
+      "tag": "Auto \u00b7 Monday"
+    }
+  ],
+  "edges": [
+    {
+      "from": "records",
+      "to": "register",
+      "variant": "emphasis",
+      "label": "due date"
+    },
+    {
+      "from": "register",
+      "to": "sweep",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "sweep",
+      "to": "notify",
+      "variant": "emphasis",
+      "label": "approaching"
+    },
+    {
+      "from": "notify",
+      "to": "act",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "act",
+      "to": "done",
+      "variant": "emphasis",
+      "label": "closed",
+      "route": "straight"
+    },
+    {
+      "from": "notify",
+      "to": "escalate",
+      "variant": "security",
+      "label": "no action",
+      "role": "error"
+    },
+    {
+      "from": "escalate",
+      "to": "act",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "from": "escalate",
+      "to": "digest",
+      "variant": "emphasis",
+      "route": "straight"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Money Dates",
+      "items": [
+        "IPC, certificate, receipt",
+        "Supplier and sub due dates"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Contract Dates",
+      "items": [
+        "Notice time-bars, bond expiry",
+        "DLP end, retention release"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Rule",
+      "items": [
+        "No record without an owner"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,319 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Completion and Financial Close",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "external": {
+          "label": "Client / supplier / sub"
+        },
+        "backend": {
+          "label": "Internal task"
+        },
+        "security": {
+          "label": "Approval gate / check"
+        },
+        "database": {
+          "label": "Record / ledger"
+        },
+        "messagebus": {
+          "label": "Notice / reminder"
+        },
+        "cloud": {
+          "label": "Site work"
+        },
+        "frontend": {
+          "label": "Document issued"
+        }
+      }
+    },
+    "views": [
+      {
+        "id": "complete",
+        "label": "1. Complete and hand over",
+        "focus": [
+          "complete",
+          "snag",
+          "toc"
+        ],
+        "note": "Give completion notice, clear snags, commission, hand over O&M and as-builts, get the taking-over certificate."
+      },
+      {
+        "id": "ret1",
+        "label": "2. First half retention",
+        "focus": [
+          "toc",
+          "ret1",
+          "subret1"
+        ],
+        "note": "Claim the first half of retention from the client. Release the first half to subs whose work is accepted."
+      },
+      {
+        "id": "dlp",
+        "label": "3. Defects period",
+        "focus": [
+          "dlp",
+          "dcert"
+        ],
+        "note": "Fix each notified defect within the notice period. At DLP end, get the defects certificate."
+      },
+      {
+        "id": "close",
+        "label": "4. Final accounts and close",
+        "focus": [
+          "final",
+          "subfinal",
+          "close"
+        ],
+        "note": "Agree the client final account and every sub final account, release retention 2, recover bonds, close codes."
+      }
+    ],
+    "viewBox": [
+      1030,
+      660
+    ]
+  },
+  "lanes": [
+    {
+      "id": "client",
+      "label": "Client & Engineer"
+    },
+    {
+      "id": "site",
+      "label": "Site & Project Team"
+    },
+    {
+      "id": "qs",
+      "label": "QS & Contracts"
+    },
+    {
+      "id": "fin",
+      "label": "Finance & Accounts"
+    }
+  ],
+  "phases": [
+    {
+      "id": "ph1",
+      "label": "Complete",
+      "fromCol": 0,
+      "toCol": 2
+    },
+    {
+      "id": "ph2",
+      "label": "Defects period",
+      "fromCol": 3,
+      "toCol": 4,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ph3",
+      "label": "Close",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "complete",
+    "snag",
+    "toc",
+    "dlp",
+    "dcert",
+    "final",
+    "subfinal",
+    "close"
+  ],
+  "nodes": [
+    {
+      "id": "complete",
+      "lane": "site",
+      "col": 0,
+      "type": "cloud",
+      "label": "Practical Completion",
+      "width": 132,
+      "sublabel": "notice to engineer",
+      "tag": "PM"
+    },
+    {
+      "id": "snag",
+      "lane": "site",
+      "col": 1,
+      "type": "backend",
+      "label": "Snag + Commission",
+      "width": 132,
+      "sublabel": "tests, O&M, as-builts",
+      "tag": "PM \u00b7 14 days"
+    },
+    {
+      "id": "toc",
+      "lane": "client",
+      "col": 2,
+      "type": "security",
+      "label": "Taking-Over Cert",
+      "width": 132,
+      "sublabel": "DLP starts",
+      "tag": "Engineer"
+    },
+    {
+      "id": "dlp",
+      "lane": "site",
+      "col": 3,
+      "type": "cloud",
+      "label": "Defects Period",
+      "width": 132,
+      "sublabel": "fix notified defects",
+      "tag": "PM \u00b7 per notice"
+    },
+    {
+      "id": "ret1",
+      "lane": "qs",
+      "col": 2,
+      "type": "frontend",
+      "label": "Retention Claim 1",
+      "width": 132,
+      "sublabel": "first half from client",
+      "tag": "QS \u00b7 7 days"
+    },
+    {
+      "id": "subret1",
+      "lane": "fin",
+      "col": 2,
+      "type": "backend",
+      "label": "Sub Retention 1",
+      "width": 132,
+      "sublabel": "release first half",
+      "tag": "AP"
+    },
+    {
+      "id": "dcert",
+      "lane": "client",
+      "col": 4,
+      "type": "security",
+      "label": "Defects Certificate",
+      "width": 132,
+      "sublabel": "end of DLP",
+      "tag": "Engineer"
+    },
+    {
+      "id": "final",
+      "lane": "qs",
+      "col": 4,
+      "type": "database",
+      "label": "Final Account",
+      "width": 132,
+      "sublabel": "VOs, claims, retention 2",
+      "tag": "QS \u00b7 per contract"
+    },
+    {
+      "id": "subfinal",
+      "lane": "qs",
+      "col": 5,
+      "type": "database",
+      "label": "Sub Final Accounts",
+      "width": 132,
+      "sublabel": "agree + release",
+      "tag": "QS"
+    },
+    {
+      "id": "close",
+      "lane": "fin",
+      "col": 5,
+      "type": "backend",
+      "label": "Close Project",
+      "width": 132,
+      "sublabel": "bonds back, codes shut",
+      "tag": "Finance"
+    }
+  ],
+  "edges": [
+    {
+      "from": "complete",
+      "to": "snag",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "snag",
+      "to": "toc",
+      "variant": "emphasis",
+      "label": "ready"
+    },
+    {
+      "from": "toc",
+      "to": "dlp",
+      "variant": "emphasis",
+      "label": "DLP"
+    },
+    {
+      "from": "toc",
+      "to": "ret1",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "ret1",
+      "to": "subret1",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "dlp",
+      "to": "dcert",
+      "variant": "emphasis",
+      "label": "defects fixed"
+    },
+    {
+      "from": "dcert",
+      "to": "final",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "final",
+      "to": "subfinal",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "subfinal",
+      "to": "close",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Dates to Watch",
+      "items": [
+        "DLP end, bond expiry",
+        "Final account submission date"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Next Action",
+      "items": [
+        "Defect open past notice: PM alert"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Unresolved",
+      "items": [
+        "Claims go to dispute process"
+      ]
+    }
+  ]
+}

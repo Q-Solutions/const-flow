@@ -1,0 +1,414 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Subcontract Lifecycle",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "external": {
+          "label": "Client / supplier / sub"
+        },
+        "backend": {
+          "label": "Internal task"
+        },
+        "security": {
+          "label": "Approval gate / check"
+        },
+        "database": {
+          "label": "Record / ledger"
+        },
+        "messagebus": {
+          "label": "Notice / reminder"
+        },
+        "cloud": {
+          "label": "Site work"
+        },
+        "frontend": {
+          "label": "Document issued"
+        }
+      }
+    },
+    "views": [
+      {
+        "id": "tender",
+        "label": "1. Tender and award",
+        "focus": [
+          "scope",
+          "bids",
+          "level",
+          "award"
+        ],
+        "note": "Define the package, get quotes from approved subs, level scope gaps, and award within the budget."
+      },
+      {
+        "id": "start",
+        "label": "2. Secure and start",
+        "focus": [
+          "award",
+          "bond",
+          "advance",
+          "works"
+        ],
+        "note": "No start without bond and insurance on file. Advance is paid only against a guarantee."
+      },
+      {
+        "id": "value",
+        "label": "3. Measure and value",
+        "focus": [
+          "apply",
+          "measure",
+          "value",
+          "variation"
+        ],
+        "note": "Sub claims monthly. Site verifies quantity and quality. QS values it with approved variations only."
+      },
+      {
+        "id": "pay",
+        "label": "4. Certify and pay",
+        "focus": [
+          "cert",
+          "ledger",
+          "pay"
+        ],
+        "note": "Net = work done less retention, advance recovery, backcharges and tax. Pay by the contract due date."
+      }
+    ]
+  },
+  "lanes": [
+    {
+      "id": "sub",
+      "label": "Subcontractors"
+    },
+    {
+      "id": "site",
+      "label": "Site Team"
+    },
+    {
+      "id": "qs",
+      "label": "QS & Contracts"
+    },
+    {
+      "id": "fin",
+      "label": "Finance & AP"
+    }
+  ],
+  "phases": [
+    {
+      "id": "ph1",
+      "label": "Tender + award",
+      "fromCol": 0,
+      "toCol": 2
+    },
+    {
+      "id": "ph2",
+      "label": "Work + claim",
+      "fromCol": 3,
+      "toCol": 4,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ph3",
+      "label": "Pay",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "scope",
+    "level",
+    "award",
+    "works",
+    "apply",
+    "measure",
+    "value",
+    "cert",
+    "pay"
+  ],
+  "nodes": [
+    {
+      "id": "scope",
+      "lane": "qs",
+      "col": 0,
+      "type": "backend",
+      "label": "Package Scope",
+      "width": 132,
+      "sublabel": "scope, BOQ, budget",
+      "tag": "QS"
+    },
+    {
+      "id": "bids",
+      "lane": "sub",
+      "col": 1,
+      "type": "external",
+      "label": "Sub Quotes",
+      "width": 132,
+      "sublabel": "from approved list",
+      "tag": "Subs \u00b7 7 days"
+    },
+    {
+      "id": "level",
+      "lane": "qs",
+      "col": 1,
+      "type": "backend",
+      "label": "Level Bids",
+      "width": 132,
+      "sublabel": "scope gaps, rates",
+      "tag": "QS"
+    },
+    {
+      "id": "award",
+      "lane": "qs",
+      "col": 2,
+      "type": "security",
+      "label": "Award Subcontract",
+      "width": 132,
+      "sublabel": "rates, retention, terms",
+      "tag": "PM + Director"
+    },
+    {
+      "id": "bond",
+      "lane": "sub",
+      "col": 2,
+      "type": "external",
+      "label": "Bond + Insurance",
+      "width": 132,
+      "sublabel": "before start",
+      "tag": "Sub"
+    },
+    {
+      "id": "advance",
+      "lane": "fin",
+      "col": 2,
+      "type": "backend",
+      "label": "Advance Paid",
+      "width": 132,
+      "sublabel": "against guarantee",
+      "tag": "AP"
+    },
+    {
+      "id": "works",
+      "lane": "site",
+      "col": 3,
+      "type": "cloud",
+      "label": "Works on Site",
+      "width": 132,
+      "sublabel": "daily records",
+      "tag": "Site Eng"
+    },
+    {
+      "id": "variation",
+      "lane": "qs",
+      "col": 3,
+      "type": "messagebus",
+      "label": "Sub Variation",
+      "width": 132,
+      "sublabel": "instructed change",
+      "tag": "QS"
+    },
+    {
+      "id": "apply",
+      "lane": "sub",
+      "col": 4,
+      "type": "external",
+      "label": "Payment Application",
+      "width": 132,
+      "sublabel": "monthly claim",
+      "tag": "Sub \u00b7 by cut-off"
+    },
+    {
+      "id": "measure",
+      "lane": "site",
+      "col": 4,
+      "type": "security",
+      "label": "Measure + Verify",
+      "width": 132,
+      "sublabel": "qty vs BOQ, quality",
+      "tag": "Site Eng \u00b7 5 days"
+    },
+    {
+      "id": "value",
+      "lane": "qs",
+      "col": 4,
+      "type": "backend",
+      "label": "Valuation",
+      "width": 132,
+      "sublabel": "gross less deductions",
+      "tag": "QS \u00b7 5 days"
+    },
+    {
+      "id": "ledger",
+      "lane": "fin",
+      "col": 4,
+      "type": "database",
+      "label": "Sub Ledger",
+      "width": 132,
+      "sublabel": "retention, recoveries",
+      "tag": "Auto"
+    },
+    {
+      "id": "cert",
+      "lane": "qs",
+      "col": 5,
+      "type": "frontend",
+      "label": "Payment Certificate",
+      "width": 132,
+      "sublabel": "net amount due",
+      "tag": "PM approves"
+    },
+    {
+      "id": "pay",
+      "lane": "fin",
+      "col": 5,
+      "type": "backend",
+      "label": "Pay Sub",
+      "width": 132,
+      "sublabel": "by due date, tax cert",
+      "tag": "AP \u00b7 per terms"
+    }
+  ],
+  "edges": [
+    {
+      "from": "scope",
+      "to": "bids",
+      "variant": "emphasis",
+      "label": "RFQ"
+    },
+    {
+      "from": "bids",
+      "to": "level",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "scope",
+      "to": "level",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "level",
+      "to": "award",
+      "variant": "emphasis",
+      "label": "best value",
+      "route": "straight"
+    },
+    {
+      "from": "award",
+      "to": "bond",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "from": "award",
+      "to": "advance",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "award",
+      "to": "works",
+      "variant": "emphasis",
+      "label": "start"
+    },
+    {
+      "from": "works",
+      "to": "apply",
+      "variant": "emphasis",
+      "label": "monthly"
+    },
+    {
+      "from": "apply",
+      "to": "measure",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "measure",
+      "to": "value",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "value",
+      "to": "cert",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "cert",
+      "to": "pay",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "works",
+      "to": "variation",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "variation",
+      "to": "value",
+      "variant": "emphasis",
+      "label": "priced",
+      "route": "straight"
+    },
+    {
+      "from": "value",
+      "to": "ledger",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "advance",
+      "to": "ledger",
+      "variant": "emphasis",
+      "label": "recover",
+      "route": "straight"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Deductions",
+      "items": [
+        "Retention, advance recovery",
+        "Backcharges, tax"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Next Action",
+      "items": [
+        "Claim not valued in 5 days: alert",
+        "Insurance lapsed: hold payment"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Rule",
+      "items": [
+        "Pay only measured, certified work"
+      ]
+    }
+  ]
+}

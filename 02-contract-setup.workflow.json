@@ -1,0 +1,338 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Contract Setup and Budget",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "external": {
+          "label": "Client / supplier / sub"
+        },
+        "backend": {
+          "label": "Internal task"
+        },
+        "security": {
+          "label": "Approval gate / check"
+        },
+        "database": {
+          "label": "Record / ledger"
+        },
+        "messagebus": {
+          "label": "Notice / reminder"
+        },
+        "cloud": {
+          "label": "Site work"
+        },
+        "frontend": {
+          "label": "Document issued"
+        }
+      }
+    },
+    "views": [
+      {
+        "id": "record",
+        "label": "1. Record the contract",
+        "focus": [
+          "loa",
+          "register",
+          "setup"
+        ],
+        "note": "Enter every term with a date: sum, retention, LDs, notice periods. Set cost codes and approval limits."
+      },
+      {
+        "id": "secure",
+        "label": "2. Bonds and advance",
+        "focus": [
+          "register",
+          "securities",
+          "advance"
+        ],
+        "note": "Issue bonds and insurance before their due dates, then claim the advance against the guarantee."
+      },
+      {
+        "id": "plan",
+        "label": "3. Budget and programme",
+        "focus": [
+          "budget",
+          "programme",
+          "approve",
+          "cashplan"
+        ],
+        "note": "Turn the estimate into a cost budget, build the programme, and forecast cash in and out by month."
+      },
+      {
+        "id": "go",
+        "label": "4. Buy and mobilize",
+        "focus": [
+          "packages",
+          "mobilize"
+        ],
+        "note": "Place long-lead orders and subcontract packages first, then mobilize the site."
+      }
+    ]
+  },
+  "lanes": [
+    {
+      "id": "client",
+      "label": "Client & Engineer"
+    },
+    {
+      "id": "comm",
+      "label": "Commercial & QS"
+    },
+    {
+      "id": "plan",
+      "label": "Planning & Site"
+    },
+    {
+      "id": "fin",
+      "label": "Finance & Accounts"
+    }
+  ],
+  "phases": [
+    {
+      "id": "ph1",
+      "label": "Record",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "ph2",
+      "label": "Budget + plan",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ph3",
+      "label": "Mobilize",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "loa",
+    "register",
+    "budget",
+    "programme",
+    "approve",
+    "packages",
+    "mobilize"
+  ],
+  "nodes": [
+    {
+      "id": "loa",
+      "lane": "comm",
+      "col": 0,
+      "type": "database",
+      "label": "Contract Signed",
+      "width": 132,
+      "sublabel": "LOA + agreement",
+      "tag": "Contracts"
+    },
+    {
+      "id": "register",
+      "lane": "comm",
+      "col": 1,
+      "type": "database",
+      "label": "Contract Register",
+      "width": 132,
+      "sublabel": "sum, retention, LDs",
+      "tag": "Contracts \u00b7 5 days"
+    },
+    {
+      "id": "setup",
+      "lane": "fin",
+      "col": 0,
+      "type": "backend",
+      "label": "Project Setup",
+      "width": 132,
+      "sublabel": "cost codes, limits",
+      "tag": "Finance \u00b7 3 days"
+    },
+    {
+      "id": "securities",
+      "lane": "fin",
+      "col": 1,
+      "type": "frontend",
+      "label": "Bonds + Insurance",
+      "width": 132,
+      "sublabel": "performance, CAR",
+      "tag": "Finance \u00b7 by due date"
+    },
+    {
+      "id": "advance",
+      "lane": "fin",
+      "col": 2,
+      "type": "external",
+      "label": "Advance Received",
+      "width": 132,
+      "sublabel": "against guarantee",
+      "tag": "AR"
+    },
+    {
+      "id": "budget",
+      "lane": "comm",
+      "col": 2,
+      "type": "database",
+      "label": "Cost Budget",
+      "width": 132,
+      "sublabel": "estimate to cost code",
+      "tag": "QS \u00b7 2 weeks"
+    },
+    {
+      "id": "programme",
+      "lane": "plan",
+      "col": 2,
+      "type": "backend",
+      "label": "Baseline Programme",
+      "width": 132,
+      "sublabel": "milestones, logic",
+      "tag": "Planner \u00b7 2 weeks"
+    },
+    {
+      "id": "approve",
+      "lane": "client",
+      "col": 3,
+      "type": "security",
+      "label": "Programme Review",
+      "width": 132,
+      "sublabel": "engineer consent",
+      "tag": "Engineer"
+    },
+    {
+      "id": "cashplan",
+      "lane": "fin",
+      "col": 3,
+      "type": "database",
+      "label": "Cash-Flow Forecast",
+      "width": 132,
+      "sublabel": "in vs out by month",
+      "tag": "Finance"
+    },
+    {
+      "id": "packages",
+      "lane": "plan",
+      "col": 4,
+      "type": "backend",
+      "label": "Procurement Plan",
+      "width": 132,
+      "sublabel": "packages, long-lead",
+      "tag": "Procurement"
+    },
+    {
+      "id": "mobilize",
+      "lane": "plan",
+      "col": 5,
+      "type": "cloud",
+      "label": "Mobilize Site",
+      "width": 132,
+      "sublabel": "access, setup, staff",
+      "tag": "PM"
+    }
+  ],
+  "edges": [
+    {
+      "from": "loa",
+      "to": "register",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "loa",
+      "to": "setup",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "register",
+      "to": "securities",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "securities",
+      "to": "advance",
+      "variant": "emphasis",
+      "label": "claim",
+      "route": "straight"
+    },
+    {
+      "from": "register",
+      "to": "budget",
+      "variant": "emphasis",
+      "label": "turnover",
+      "route": "straight"
+    },
+    {
+      "from": "budget",
+      "to": "programme",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "programme",
+      "to": "approve",
+      "variant": "emphasis",
+      "label": "submit"
+    },
+    {
+      "from": "approve",
+      "to": "packages",
+      "variant": "emphasis",
+      "label": "accepted"
+    },
+    {
+      "from": "packages",
+      "to": "mobilize",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "programme",
+      "to": "cashplan",
+      "variant": "dashed",
+      "label": "cost + time",
+      "role": "branch"
+    },
+    {
+      "from": "advance",
+      "to": "cashplan",
+      "variant": "emphasis",
+      "route": "straight"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Register Holds",
+      "items": [
+        "Every contract date and notice period",
+        "Bond and insurance expiry dates"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Next Action",
+      "items": [
+        "Bond expiring in 30 days: renew"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Budget Rule",
+      "items": [
+        "No spend until the cost budget is approved"
+      ]
+    }
+  ]
+}

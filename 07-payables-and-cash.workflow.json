@@ -1,0 +1,360 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Payables, Cash and Ageing",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "external": {
+          "label": "Client / supplier / sub"
+        },
+        "backend": {
+          "label": "Internal task"
+        },
+        "security": {
+          "label": "Approval gate / check"
+        },
+        "database": {
+          "label": "Record / ledger"
+        },
+        "messagebus": {
+          "label": "Notice / reminder"
+        },
+        "cloud": {
+          "label": "Site work"
+        },
+        "frontend": {
+          "label": "Document issued"
+        }
+      }
+    },
+    "views": [
+      {
+        "id": "capture",
+        "label": "1. Capture every bill",
+        "focus": [
+          "supp",
+          "subc",
+          "petty",
+          "ledger"
+        ],
+        "note": "Matched supplier bills, certified sub payments and site expenses land in one ledger with due dates."
+      },
+      {
+        "id": "plan",
+        "label": "2. Age and forecast",
+        "focus": [
+          "ageing",
+          "forecast"
+        ],
+        "note": "Each week, age what is due and overdue, and forecast 13 weeks of cash with expected client receipts."
+      },
+      {
+        "id": "pay",
+        "label": "3. Propose, approve, pay",
+        "focus": [
+          "proposal",
+          "approve",
+          "pay",
+          "recon"
+        ],
+        "note": "AP proposes by due date and priority. FD approves within cash. Pay, send remittance, reconcile bank."
+      },
+      {
+        "id": "exceptions",
+        "label": "Holds and shortfalls",
+        "focus": [
+          "hold",
+          "short"
+        ],
+        "note": "Bills without proof are held and chased. If cash is short, FD defers, funds, or pushes AR collection."
+      }
+    ],
+    "viewBox": [
+      1030,
+      660
+    ]
+  },
+  "lanes": [
+    {
+      "id": "src",
+      "label": "Bills In"
+    },
+    {
+      "id": "ap",
+      "label": "Accounts Payable"
+    },
+    {
+      "id": "mgmt",
+      "label": "Finance Director / Treasury"
+    },
+    {
+      "id": "exc",
+      "label": "Holds & Shortfalls",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "ph1",
+      "label": "Capture",
+      "fromCol": 0,
+      "toCol": 2
+    },
+    {
+      "id": "ph2",
+      "label": "Age + plan",
+      "fromCol": 3,
+      "toCol": 4,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ph3",
+      "label": "Pay",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "petty",
+    "ledger",
+    "ageing",
+    "proposal",
+    "approve",
+    "pay",
+    "recon"
+  ],
+  "nodes": [
+    {
+      "id": "supp",
+      "lane": "src",
+      "col": 0,
+      "type": "database",
+      "label": "Supplier Bills",
+      "width": 132,
+      "sublabel": "3-way matched",
+      "tag": "From P2P"
+    },
+    {
+      "id": "subc",
+      "lane": "src",
+      "col": 1,
+      "type": "frontend",
+      "label": "Sub Certificates",
+      "width": 132,
+      "sublabel": "net of deductions",
+      "tag": "From QS"
+    },
+    {
+      "id": "petty",
+      "lane": "src",
+      "col": 2,
+      "type": "cloud",
+      "label": "Site Expenses",
+      "width": 132,
+      "sublabel": "petty cash, limits",
+      "tag": "Site Admin \u00b7 weekly"
+    },
+    {
+      "id": "ledger",
+      "lane": "ap",
+      "col": 2,
+      "type": "database",
+      "label": "AP Ledger",
+      "width": 132,
+      "sublabel": "due date, tax, cost code",
+      "tag": "AP \u00b7 2 days"
+    },
+    {
+      "id": "ageing",
+      "lane": "ap",
+      "col": 3,
+      "type": "database",
+      "label": "AP Ageing",
+      "width": 132,
+      "sublabel": "due this week, overdue",
+      "tag": "AP \u00b7 weekly"
+    },
+    {
+      "id": "proposal",
+      "lane": "ap",
+      "col": 4,
+      "type": "backend",
+      "label": "Payment Proposal",
+      "width": 132,
+      "sublabel": "due + priority rules",
+      "tag": "AP \u00b7 weekly"
+    },
+    {
+      "id": "forecast",
+      "lane": "mgmt",
+      "col": 3,
+      "type": "database",
+      "label": "Cash Forecast",
+      "width": 132,
+      "sublabel": "13 weeks, AR vs AP",
+      "tag": "Finance \u00b7 weekly"
+    },
+    {
+      "id": "approve",
+      "lane": "mgmt",
+      "col": 4,
+      "type": "security",
+      "label": "Approve Run",
+      "width": 132,
+      "sublabel": "within cash, limits",
+      "tag": "FD"
+    },
+    {
+      "id": "pay",
+      "lane": "ap",
+      "col": 5,
+      "type": "backend",
+      "label": "Pay + Remit",
+      "width": 132,
+      "sublabel": "bank file, tax certs",
+      "tag": "AP \u00b7 run day"
+    },
+    {
+      "id": "recon",
+      "lane": "mgmt",
+      "col": 5,
+      "type": "database",
+      "label": "Bank Reconcile",
+      "width": 132,
+      "sublabel": "post to GL",
+      "tag": "Accountant \u00b7 weekly"
+    },
+    {
+      "id": "hold",
+      "lane": "exc",
+      "col": 2,
+      "type": "messagebus",
+      "label": "Bill on Hold",
+      "width": 132,
+      "sublabel": "missing proof",
+      "tag": "AP chases"
+    },
+    {
+      "id": "short",
+      "lane": "exc",
+      "col": 4,
+      "type": "messagebus",
+      "label": "Cash Shortfall",
+      "width": 132,
+      "sublabel": "defer, fund, chase AR",
+      "tag": "FD + PM"
+    }
+  ],
+  "edges": [
+    {
+      "from": "supp",
+      "to": "ledger",
+      "variant": "emphasis"
+    },
+    {
+      "from": "subc",
+      "to": "ledger",
+      "variant": "emphasis"
+    },
+    {
+      "from": "petty",
+      "to": "ledger",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "ledger",
+      "to": "ageing",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "ageing",
+      "to": "proposal",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "proposal",
+      "to": "approve",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "approve",
+      "to": "pay",
+      "variant": "emphasis",
+      "label": "approved"
+    },
+    {
+      "from": "pay",
+      "to": "recon",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "ageing",
+      "to": "forecast",
+      "variant": "dashed",
+      "label": "AP due",
+      "role": "async"
+    },
+    {
+      "from": "forecast",
+      "to": "approve",
+      "variant": "emphasis",
+      "label": "cash"
+    },
+    {
+      "from": "ledger",
+      "to": "hold",
+      "variant": "security",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "role": "error"
+    },
+    {
+      "from": "approve",
+      "to": "short",
+      "variant": "security",
+      "label": "short",
+      "role": "error"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Priority Rules",
+      "items": [
+        "Tax and statutory first",
+        "Critical subs and suppliers next"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Next Action",
+      "items": [
+        "Bill due in 7 days: add to run",
+        "Overdue bill: FD review"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Cash Rule",
+      "items": [
+        "Approve only what cash covers"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,317 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Cost Control and Monthly Close",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "external": {
+          "label": "Client / supplier / sub"
+        },
+        "backend": {
+          "label": "Internal task"
+        },
+        "security": {
+          "label": "Approval gate / check"
+        },
+        "database": {
+          "label": "Record / ledger"
+        },
+        "messagebus": {
+          "label": "Notice / reminder"
+        },
+        "cloud": {
+          "label": "Site work"
+        },
+        "frontend": {
+          "label": "Document issued"
+        }
+      }
+    },
+    "views": [
+      {
+        "id": "data",
+        "label": "1. Collect the numbers",
+        "focus": [
+          "commit",
+          "actual",
+          "earned"
+        ],
+        "note": "Commitments count when approved. Actuals from GRNs and bills. Value from certified and unbilled work."
+      },
+      {
+        "id": "cvr",
+        "label": "2. Cost vs value",
+        "focus": [
+          "costrep",
+          "cvr",
+          "eac"
+        ],
+        "note": "By cost code: budget, committed, actual, forecast. Compare cost to value earned to see real margin."
+      },
+      {
+        "id": "close",
+        "label": "3. Close the month",
+        "focus": [
+          "cvr",
+          "close"
+        ],
+        "note": "Book accruals for received but unbilled goods, and WIP, so the P&L that goes to review is complete."
+      },
+      {
+        "id": "act",
+        "label": "4. Review and act",
+        "focus": [
+          "alert",
+          "review",
+          "action"
+        ],
+        "note": "Overruns alert as soon as they are committed. Each review ends with actions, an owner and a date."
+      }
+    ],
+    "viewBox": [
+      1030,
+      660
+    ]
+  },
+  "lanes": [
+    {
+      "id": "data",
+      "label": "Cost + Value Data"
+    },
+    {
+      "id": "qs",
+      "label": "QS & Cost Control"
+    },
+    {
+      "id": "fin",
+      "label": "Finance & Close"
+    },
+    {
+      "id": "mgmt",
+      "label": "Management"
+    }
+  ],
+  "phases": [
+    {
+      "id": "ph1",
+      "label": "Collect",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "ph2",
+      "label": "Reconcile",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ph3",
+      "label": "Act",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "actual",
+    "costrep",
+    "cvr",
+    "eac",
+    "alert",
+    "review",
+    "action"
+  ],
+  "nodes": [
+    {
+      "id": "commit",
+      "lane": "data",
+      "col": 0,
+      "type": "database",
+      "label": "Commitments",
+      "width": 132,
+      "sublabel": "POs + subcontracts",
+      "tag": "Auto"
+    },
+    {
+      "id": "actual",
+      "lane": "data",
+      "col": 1,
+      "type": "database",
+      "label": "Actual Cost",
+      "width": 132,
+      "sublabel": "GRNs, bills, expenses",
+      "tag": "Auto"
+    },
+    {
+      "id": "earned",
+      "lane": "data",
+      "col": 2,
+      "type": "database",
+      "label": "Value Earned",
+      "width": 132,
+      "sublabel": "certified + unbilled",
+      "tag": "From billing"
+    },
+    {
+      "id": "costrep",
+      "lane": "qs",
+      "col": 1,
+      "type": "backend",
+      "label": "Cost Report",
+      "width": 132,
+      "sublabel": "budget vs committed",
+      "tag": "QS \u00b7 monthly"
+    },
+    {
+      "id": "cvr",
+      "lane": "qs",
+      "col": 2,
+      "type": "security",
+      "label": "Cost-Value Check",
+      "width": 132,
+      "sublabel": "CVR, margin to date",
+      "tag": "QS \u00b7 5th"
+    },
+    {
+      "id": "eac",
+      "lane": "qs",
+      "col": 3,
+      "type": "backend",
+      "label": "Forecast Final Cost",
+      "width": 132,
+      "sublabel": "cost to complete",
+      "tag": "QS + PM"
+    },
+    {
+      "id": "close",
+      "lane": "fin",
+      "col": 2,
+      "type": "backend",
+      "label": "Month-End Close",
+      "width": 132,
+      "sublabel": "accruals, WIP, P&L",
+      "tag": "Accountant \u00b7 7th"
+    },
+    {
+      "id": "alert",
+      "lane": "mgmt",
+      "col": 3,
+      "type": "messagebus",
+      "label": "Overrun Alert",
+      "width": 132,
+      "sublabel": "code over budget",
+      "tag": "Auto"
+    },
+    {
+      "id": "review",
+      "lane": "mgmt",
+      "col": 4,
+      "type": "security",
+      "label": "Monthly Review",
+      "width": 132,
+      "sublabel": "margin, cash, risk",
+      "tag": "Directors \u00b7 10th"
+    },
+    {
+      "id": "action",
+      "lane": "mgmt",
+      "col": 5,
+      "type": "backend",
+      "label": "Corrective Actions",
+      "width": 132,
+      "sublabel": "owner + due date",
+      "tag": "PM"
+    }
+  ],
+  "edges": [
+    {
+      "from": "commit",
+      "to": "costrep",
+      "variant": "emphasis"
+    },
+    {
+      "from": "actual",
+      "to": "costrep",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "costrep",
+      "to": "cvr",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "earned",
+      "to": "cvr",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "cvr",
+      "to": "eac",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "cvr",
+      "to": "close",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "eac",
+      "to": "alert",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "alert",
+      "to": "review",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "review",
+      "to": "action",
+      "variant": "emphasis",
+      "route": "straight"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Per Cost Code",
+      "items": [
+        "Budget, committed, actual",
+        "Forecast final, variance"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Next Action",
+      "items": [
+        "Code over 90% committed: PM alert"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Close Calendar",
+      "items": [
+        "CVR by 5th, close 7th, review 10th"
+      ]
+    }
+  ]
+}

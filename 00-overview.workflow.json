@@ -1,0 +1,417 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Contractor Operations: Inquiry to Close",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "external": {
+          "label": "Client / supplier / sub"
+        },
+        "backend": {
+          "label": "Internal task"
+        },
+        "security": {
+          "label": "Approval gate / check"
+        },
+        "database": {
+          "label": "Record / ledger"
+        },
+        "messagebus": {
+          "label": "Notice / reminder"
+        },
+        "cloud": {
+          "label": "Site work"
+        },
+        "frontend": {
+          "label": "Document issued"
+        }
+      }
+    },
+    "views": [
+      {
+        "id": "win",
+        "label": "1. Win and set up",
+        "focus": [
+          "inquiry",
+          "bid",
+          "award",
+          "register",
+          "budget"
+        ],
+        "note": "Win the job, record every contract term and date, and turn the estimate into a budget before any spend."
+      },
+      {
+        "id": "build",
+        "label": "2. Buy and build",
+        "focus": [
+          "budget",
+          "buy",
+          "build",
+          "paysub"
+        ],
+        "note": "Buy against budget, build and record daily, pay subs and suppliers only for verified work."
+      },
+      {
+        "id": "cash",
+        "label": "3. Bill and collect",
+        "focus": [
+          "build",
+          "vo",
+          "ipc",
+          "certify",
+          "collect"
+        ],
+        "note": "Measure monthly, bill the client with variations, chase certification and cash by ageing."
+      },
+      {
+        "id": "close",
+        "label": "4. Close out",
+        "focus": [
+          "closeout",
+          "handover",
+          "final"
+        ],
+        "note": "Complete, hand over, settle every final account and release retention and bonds."
+      }
+    ]
+  },
+  "lanes": [
+    {
+      "id": "client",
+      "label": "Client & Consultants"
+    },
+    {
+      "id": "comm",
+      "label": "Commercial & Contracts"
+    },
+    {
+      "id": "ops",
+      "label": "Site & Procurement"
+    },
+    {
+      "id": "fin",
+      "label": "Finance & Accounts"
+    }
+  ],
+  "phases": [
+    {
+      "id": "ph1",
+      "label": "Win",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "ph2",
+      "label": "Set up + buy",
+      "fromCol": 2,
+      "toCol": 2
+    },
+    {
+      "id": "ph3",
+      "label": "Build + bill",
+      "fromCol": 3,
+      "toCol": 4,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ph4",
+      "label": "Close",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "inquiry",
+    "bid",
+    "award",
+    "register",
+    "budget",
+    "buy",
+    "build",
+    "ipc",
+    "certify",
+    "collect"
+  ],
+  "nodes": [
+    {
+      "id": "inquiry",
+      "lane": "client",
+      "col": 0,
+      "type": "external",
+      "label": "Inquiry / RFP",
+      "width": 132,
+      "sublabel": "tender documents",
+      "tag": "BD"
+    },
+    {
+      "id": "bid",
+      "lane": "comm",
+      "col": 0,
+      "type": "backend",
+      "label": "Estimate + Bid",
+      "width": 132,
+      "sublabel": "BOQ, rates, margin",
+      "tag": "Estimating"
+    },
+    {
+      "id": "award",
+      "lane": "client",
+      "col": 1,
+      "type": "security",
+      "label": "Award",
+      "width": 132,
+      "sublabel": "LOA or regret",
+      "tag": "Client"
+    },
+    {
+      "id": "register",
+      "lane": "comm",
+      "col": 1,
+      "type": "database",
+      "label": "Contract Register",
+      "width": 132,
+      "sublabel": "terms, bonds, dates",
+      "tag": "Contracts \u00b7 5 days"
+    },
+    {
+      "id": "budget",
+      "lane": "comm",
+      "col": 2,
+      "type": "database",
+      "label": "Budget + Cash Plan",
+      "width": 132,
+      "sublabel": "by cost code",
+      "tag": "QS + Finance"
+    },
+    {
+      "id": "buy",
+      "lane": "ops",
+      "col": 2,
+      "type": "backend",
+      "label": "Buy + Subcontract",
+      "width": 132,
+      "sublabel": "PO, agreements",
+      "tag": "Procurement"
+    },
+    {
+      "id": "build",
+      "lane": "ops",
+      "col": 3,
+      "type": "cloud",
+      "label": "Build + Record",
+      "width": 132,
+      "sublabel": "diary, progress, QA",
+      "tag": "Site team \u00b7 daily"
+    },
+    {
+      "id": "vo",
+      "lane": "comm",
+      "col": 3,
+      "type": "messagebus",
+      "label": "Variations",
+      "width": 132,
+      "sublabel": "notice, price, agree",
+      "tag": "QS \u00b7 within notice"
+    },
+    {
+      "id": "ipc",
+      "lane": "comm",
+      "col": 4,
+      "type": "frontend",
+      "label": "Bill Client",
+      "width": 132,
+      "sublabel": "monthly IPC",
+      "tag": "QS \u00b7 by cut-off"
+    },
+    {
+      "id": "certify",
+      "lane": "client",
+      "col": 4,
+      "type": "security",
+      "label": "Certify",
+      "width": 132,
+      "sublabel": "engineer approves",
+      "tag": "Engineer"
+    },
+    {
+      "id": "paysub",
+      "lane": "fin",
+      "col": 3,
+      "type": "backend",
+      "label": "Pay Subs + Suppliers",
+      "width": 132,
+      "sublabel": "only verified work",
+      "tag": "AP \u00b7 by due date"
+    },
+    {
+      "id": "collect",
+      "lane": "fin",
+      "col": 4,
+      "type": "database",
+      "label": "Collect + Reconcile",
+      "width": 132,
+      "sublabel": "AR ageing",
+      "tag": "AR \u00b7 weekly"
+    },
+    {
+      "id": "closeout",
+      "lane": "ops",
+      "col": 5,
+      "type": "cloud",
+      "label": "Complete + Snag",
+      "width": 132,
+      "sublabel": "test, handover docs",
+      "tag": "PM"
+    },
+    {
+      "id": "final",
+      "lane": "comm",
+      "col": 5,
+      "type": "database",
+      "label": "Final Accounts",
+      "width": 132,
+      "sublabel": "client, subs, retention",
+      "tag": "QS"
+    },
+    {
+      "id": "handover",
+      "lane": "client",
+      "col": 5,
+      "type": "external",
+      "label": "Take Over",
+      "width": 132,
+      "sublabel": "DLP starts",
+      "tag": "Client"
+    }
+  ],
+  "edges": [
+    {
+      "from": "inquiry",
+      "to": "bid",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "bid",
+      "to": "award",
+      "variant": "emphasis",
+      "label": "submit"
+    },
+    {
+      "from": "award",
+      "to": "register",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "register",
+      "to": "budget",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "budget",
+      "to": "buy",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "buy",
+      "to": "build",
+      "variant": "emphasis",
+      "label": "materials, subs",
+      "route": "straight"
+    },
+    {
+      "from": "build",
+      "to": "ipc",
+      "variant": "emphasis",
+      "label": "measured"
+    },
+    {
+      "from": "ipc",
+      "to": "certify",
+      "variant": "emphasis"
+    },
+    {
+      "from": "certify",
+      "to": "collect",
+      "variant": "emphasis",
+      "label": "certified"
+    },
+    {
+      "from": "build",
+      "to": "paysub",
+      "variant": "dashed",
+      "label": "verified",
+      "role": "branch"
+    },
+    {
+      "from": "build",
+      "to": "vo",
+      "variant": "dashed",
+      "label": "instruction",
+      "role": "branch"
+    },
+    {
+      "from": "vo",
+      "to": "ipc",
+      "variant": "dashed",
+      "label": "priced VO",
+      "role": "branch"
+    },
+    {
+      "from": "build",
+      "to": "closeout",
+      "variant": "dashed",
+      "label": "complete",
+      "role": "branch"
+    },
+    {
+      "from": "closeout",
+      "to": "handover",
+      "variant": "emphasis"
+    },
+    {
+      "from": "handover",
+      "to": "final",
+      "variant": "dashed",
+      "label": "DLP ends",
+      "role": "branch"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Money In",
+      "items": [
+        "Monthly IPC, variations, retention release"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Money Out",
+      "items": [
+        "Suppliers by 3-way match",
+        "Subs by certified valuation"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Every Record Has",
+      "items": [
+        "Owner, due date, next action"
+      ]
+    }
+  ]
+}
